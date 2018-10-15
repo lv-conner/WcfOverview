@@ -8,6 +8,8 @@ using System.ServiceModel;
 using Services;
 using Interface;
 using System.ServiceModel.Description;
+using Autofac.Integration.Wcf;
+using Autofac;
 
 namespace Host
 {
@@ -31,6 +33,9 @@ namespace Host
                 //}
                 host.Opened += Host_Opened;
                 host.Open();
+                ContainerBuilder containerBuilder = new ContainerBuilder();
+                containerBuilder.RegisterType<Services>().As<IServices>();
+                host.AddDependencyInjectionBehavior<IServices>(containerBuilder.Build());
                 Console.ReadKey();
             }
             Console.WriteLine("hello word");
@@ -40,5 +45,15 @@ namespace Host
         {
             Console.WriteLine("Service open press any key to close!");
         }
+    }
+
+
+    public interface IServices
+    {
+        
+    }
+    public class Services:IServices
+    {
+
     }
 }
